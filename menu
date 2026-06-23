@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sissi’s pantry</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="icon" type="image/png" href="https://stardewvalleywiki.com/mediawiki/images/d/db/Starfruit.png">
+    <link rel="apple-touch-icon" href="https://stardewvalleywiki.com/mediawiki/images/d/db/Starfruit.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --sd-dark-wood: #471f00;
+            --sd-light-wood: #b57432;
+            --sd-parchment: #fcf1cc;
+            --sd-text: #3c1e03;
+            --sd-orange: #e69138;
+            --sd-green: #4a8505;
+        }
+
+        body {
+            background-color: #2c1605;
+            background-image: radial-gradient(#47260c 2px, transparent 0);
+            background-size: 20px 20px;
+            font-family: 'VT323', monospace;
+            color: var(--sd-text);
+            margin: 0;
+            padding: 10px;
+            font-size: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stardew-box {
+            background-color: var(--sd-parchment);
+            border: 6px solid var(--sd-dark-wood);
+            box-shadow: inset -4px -4px 0px var(--sd-light-wood), 
+                        inset 4px 4px 0px #fffdf0, 
+                        4px 4px 0px rgba(0,0,0,0.4);
+            padding: 15px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 5px 0;
+        }
+
+        /* Cute Bouncing Pixel Junimo Art */
+        .pixel-junimo {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #5cd65c;
+            position: relative;
+            box-shadow: 
+                4px 0 #5cd65c, -4px 0 #5cd65c, 0 4px #5cd65c, 0 -4px #5cd65c,
+                8px 4px #5cd65c, -8px 4px #5cd65c, 4px 8px #5cd65c, -4px 8px #5cd65c,
+                0 8px #5cd65c, 4px -4px #5cd65c, -4px -4px #5cd65c,
+                -4px 0 #000, 4px 0 #000,
+                -8px 4px #ff6666, 8px 4px #ff6666;
+            animation: junimoBob 0.6s infinite alternate;
+            margin-right: 10px;
+        }
+        
+        .pixel-junimo::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 0;
+            width: 4px;
+            height: 8px;
+            background: #2d5502;
+            box-shadow: 4px -4px 0 #2d5502;
+        }
+
+        @keyframes junimoBob {
+            from { transform: translateY(0); }
+            to { transform: translateY(-8px); }
+        }
+
+        .pixel-cat-star {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            background: #ffcc00;
+            box-shadow: 3px 0 #ffcc00, -3px 0 #ffcc00, 0 3px #ffcc00, 0 -3px #ffcc00,
+                        5px 2px #ff9900, -5px 2px #ff9900, 2px 5px #ff9900, -2px 5px #ff9900;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        .pixel-sprout {
+            position: absolute;
+            bottom: 5px;
+            right: 15px;
+            width: 8px;
+            height: 12px;
+            background: #4a8505;
+            box-shadow: -4px -4px 0 #4a8505, 4px -4px 0 #4a8505;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            color: #7a3c02;
+            margin-top: 0;
+            text-shadow: 2px 2px 0px #fff;
+        }
+        h1 { font-size: 52px; margin: 0; display: inline-block; vertical-align: middle; }
+        h2 { font-size: 34px; }
+
+        .menu-layout {
+            display: flex;
+            gap: 15px;
+            min-height: 350px;
+        }
+
+        .left-column {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .category-group {
+            border: 4px solid var(--sd-dark-wood);
+            background-color: #edd89d;
+            padding: 4px;
+            box-shadow: inset -3px -3px 0px #b59f63, 2px 2px 0px rgba(0,0,0,0.2);
+        }
+
+        .category-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--sd-light-wood);
+            color: white;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-weight: bold;
+            border: 3px solid var(--sd-dark-wood);
+            text-shadow: 1px 1px 0px #471f00;
+        }
+
+        .dish-names-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 8px 5px 5px 5px;
+            background-color: var(--sd-parchment);
+        }
+
+        .dish-name-item {
+            font-size: 22px;
+            padding: 6px 8px;
+            cursor: pointer;
+            border-bottom: 2px dashed rgba(71,31,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dish-name-item:hover {
+            background-color: #fff8df;
+            font-weight: bold;
+        }
+
+        .right-column {
+            width: 55%;
+            background-color: var(--sd-parchment);
+            border: 6px solid var(--sd-dark-wood);
+            box-shadow: inset -4px -4px 0px var(--sd-light-wood), 4px 4px 0px rgba(0,0,0,0.4);
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .picture-gallery-title {
+            font-size: 28px;
+            border-bottom: 4px solid var(--sd-dark-wood);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #7a3c02;
+            text-align: center;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .gallery-card {
+            border: 3px dashed var(--sd-light-wood);
+            padding: 10px;
+            background: rgba(255,255,255,0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .dish-img-slot {
+            width: 100%;
+            height: 170px;
+            border: 4px solid var(--sd-dark-wood);
+            background: #d6b880;
+            box-shadow: inset 4px 4px 8px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .dish-img-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cart-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: white;
+            border: 3px solid var(--sd-dark-wood);
+            padding: 10px;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+
+        .cart-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 22px;
+            border-bottom: 1px dotted var(--sd-light-wood);
+            padding-bottom: 4px;
+        }
+
+        .btn-pixel {
+            background-color: var(--sd-orange);
+            color: white;
+            border: 3px solid var(--sd-dark-wood);
+            box-shadow: inset -3px -3px 0px #b66514;
+            padding: 6px 12px;
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            cursor: pointer;
+            text-shadow: 1px 1px 0px #471f00;
+        }
+        .btn-pixel:active { 
+            box-shadow: inset 3px 3px 0px #b66514; 
+            transform: translate(1px, 1px);
+        }
+        
+        .btn-green {
+            background-color: var(--sd-green);
+            box-shadow: inset -3px -3px 0px #2d5502;
+        }
+        .btn-green:disabled {
+            background-color: #8fa874;
+            box-shadow: none;
+            cursor: not-allowed;
+            text-shadow: none;
+        }
+
+        .btn-red {
+            background-color: #c9302c;
+            box-shadow: inset -3px -3px 0px #8c1c1a;
+            padding: 2px 8px;
+            font-size: 18px;
+        }
+
+        .admin-panel {
+            display: none;
+            background-color: #ebd7a0;
+            border: 4px solid #7a3c02;
+            padding: 15px;
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 6px;
+            margin: 5px 0 10px 0;
+            box-sizing: border-box;
+            border: 3px solid var(--sd-dark-wood);
+            font-family: 'VT323', monospace;
+            font-size: 22px;
+            background-color: #fffdf3;
+        }
+
+        .hidden { display: none !important; }
+        
+        .success-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .bouncy-star {
+            font-size: 80px;
+            animation: floatAnimation 0.8s infinite alternate;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        @keyframes floatAnimation { 
+            from { transform: translateY(0px); } 
+            to { transform: translateY(-15px); } 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div id="successPage" class="stardew-box success-screen hidden">
+        <div class="bouncy-star">🌾🍳🌾</div>
+        <h1 style="color: var(--sd-green); font-size: 46px;">Order Dispatched!</h1>
+        <p style="font-size: 28px; margin: 20px 0; color: #5a3e1b;">Email app launched successfully. Check your inbox soon!</p>
+        <button class="btn-pixel" onclick="returnToMenu()">🍳 Request More Food</button>
+    </div>
+
+    <div id="mainInterface">
+        
+        <div class="stardew-box" style="border-width: 8px; background-color: #e3a152; background-image: linear-gradient(rgba(255,255,255,0.15), transparent);">
+            <button class="btn-pixel" style="position: absolute; top: 15px; right: 15px; padding: 4px 10px; font-size: 18px;" onclick="toggleEditMode()">⚙️ Edit Mode</button>
+            
+            <div class="header-container">
+                <div class="pixel-junimo"></div>
+                <h1>Sissi’s pantry</h1>
+            </div>
+            
+            <p style="margin: 0; text-align: center; font-size: 22px; font-weight: bold; color: #3c1e03;">Choose your dishes for today's menu!</p>
+            <div class="pixel-sprout"></div>
+        </div>
+
+        <div id="adminPanel" class="admin-panel stardew-box">
+            <h2>🛠️ Kitchen Management Portal</h2>
+            
+            <p style="margin:5px 0; font-weight:bold;">+ Add New Category:</p>
+            <div style="display:flex; gap:5px;">
+                <input type="text" id="newCatInput" placeholder="e.g., Soups, Desserts...">
+                <button class="btn-pixel" onclick="addCategory()" style="height:42px; margin-top:5px;">+</button>
+            </div>
+            
+            <hr style="border: 2px dashed var(--sd-dark-wood); margin: 15px 0;">
+            
+            <p style="margin:5px 0; font-weight:bold;">+ Add New Dish:</p>
+            <label>Dish Name:</label>
+            <input type="text" id="dishNameInput" placeholder="e.g., Spicy Eel">
+            
+            <label>Assign to Category:</label>
+            <select id="dishCatSelect"></select>
+            
+            <label>Image URL:</label>
+            <input type="text" id="dishUrlInput" placeholder="Paste Postimages Direct Link here">
+            
+            <button class="btn-pixel btn-green" onclick="addDish()" style="width:100%; margin-top:10px;">Save New Food Item</button>
+        </div>
+
+        <div class="menu-layout">
+            <div class="left-column" id="categoriesColumn"></div>
+            <div class="right-column">
+                <div class="picture-gallery-title" id="galleryTitle">Dishes Display</div>
+                <div class="gallery-grid" id="galleryGrid"></div>
+            </div>
+        </div>
+
+        <div class="stardew-box" style="background: #edd89d; margin-top: 15px;">
+            <p style="margin:0 0 5px 0; font-size: 28px; font-weight:bold; text-align: center;">🛒 Chosen Menu Checklist:</p>
+            
+            <div id="cartInventoryList" class="cart-list-container">
+                <div style="color: #888; font-style: italic; text-align: center; margin-top: 40px;">No items selected yet.</div>
+            </div>
+            
+            <button id="submitBtn" class="btn-pixel btn-green" style="width: 100%; font-size: 28px; padding: 10px; margin-top: 15px;" onclick="submitCart()" disabled>🛎️ Submit Selected Dishes</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // ========================================================================
+    //                         🌟 EASY EDIT ZONE 🌟
+    // ========================================================================
+    
+    const initialCategories = [
+        "Brunch", 
+        "Chinese Cuisine", 
+        "Western Cuisine",
+        "Others"
+    ];
+
+    const initialDishes = [
+        { 
+            name: "すき焼き", 
+            category: "Others", 
+            img: "https://i.postimg.cc/pLfyKRHx/IMG-3477.jpg" 
+        },
+        { 
+            name: "Frittata", 
+            category: "Western Cuisine", 
+            img: "https://i.postimg.cc/J0Wdq8wM/IMG-3664-2-Small.jpg" 
+        }
+    ];
+    // ========================================================================
+    //                      END OF EASY EDIT ZONE
+    // ========================================================================
+
+    // CRITICAL: We point directly to the initial arrays to ignore glitched local storage memory
+    let categories = initialCategories;
+    let dishes = initialDishes;
+    let activeCategory = categories[0] || "";
+    let cart = [];
+    let editModeActive = false;
+    let foldedCategories = {};
+
+    function initApp() {
+        renderLayout();
+    }
+
+    function toggleEditMode() {
+        editModeActive = !editModeActive;
+        document.getElementById('adminPanel').style.display = editModeActive ? 'block' : 'none';
+        
+        const delBtns = document.querySelectorAll('.delete-action-btn');
+        delBtns.forEach(b => b.style.display = editModeActive ? 'inline-block' : 'none');
+        
+        updateCategoryDropdown();
+    }
+
+    function updateCategoryDropdown() {
+        const sel = document.getElementById('dishCatSelect');
+        if(sel) {
+            sel.innerHTML = categories.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+    }
+
+    function renderLayout() {
+        const leftCol = document.getElementById('categoriesColumn');
+        if(!leftCol) return;
+        leftCol.innerHTML = "";
+
+        categories.forEach(cat => {
+            const catDishes = dishes.filter(d => d.category === cat);
+            const isFolded = foldedCategories[cat] || false;
+            
+            let dishesListHTML = catDishes.map(d => `
+                <div class="dish-name-item" onclick="event.stopPropagation(); addToCart('${d.name.replace(/'/g, "\\'")}')">
+                    <span>• ${d.name}</span>
+                    <button class="btn-pixel btn-red delete-action-btn" style="display: ${editModeActive ? 'inline-block' : 'none'};" onclick="event.stopPropagation(); deleteDish('${d.name.replace(/'/g, "\\'")}')">X</button>
+                </div>
+            `).join('');
+
+            const arrow = isFolded ? "▶" : "▼";
+
+            leftCol.innerHTML += `
+                <div class="category-group">
+                    <div class="category-header-row" onclick="toggleFold('${cat.replace(/'/g, "\\'")}')">
+                        <span><div class="pixel-cat-star"></div>${cat}</span>
+                        <span style="font-size: 18px; margin-left: auto; margin-right: 10px;">${arrow}</span>
+                        <button class="btn-pixel btn-red delete-action-btn" style="display: ${editModeActive ? 'inline-block' : 'none'};" onclick="event.stopPropagation(); deleteCategory('${cat.replace(/'/g, "\\'")}')">X</button>
+                    </div>
+                    <div class="dish-names-list ${isFolded ? 'hidden' : ''}">
+                        ${dishesListHTML || '<span style="color:#888; font-style:italic; font-size:18px; padding-left: 10px;">No dishes saved</span>'}
+                    </div>
+                </div>
+            `;
+        });
+
+        renderGallery();
+        updateCartDisplay();
+    }
+
+    function toggleFold(catName) {
+        foldedCategories[catName] = !foldedCategories[catName];
+        activeCategory = catName;
+        renderLayout();
+    }
+
+    function renderGallery() {
+        const titleEl = document.getElementById('galleryTitle');
+        if(titleEl) titleEl.innerText = activeCategory ? `🖼️ ${activeCategory}` : "Select Category";
+        
+        const grid = document.getElementById('galleryGrid');
+        if(!grid) return;
+        
+        const items = dishes.filter(d => d.category === activeCategory);
+
+        if(items.length === 0) {
+            grid.innerHTML = `<p style="font-style:italic; color:#666; text-align:center;">No food photos added.</p>`;
+            return;
+        }
+
+        grid.innerHTML = items.map(d => `
+            <div class="gallery-card">
+                <div class="dish-img-slot">
+                    <img src="${d.img}" alt="dish layout">
+                </div>
+                <div style="font-weight:bold; margin-bottom: 8px; font-size: 26px; color:#5a3e1b;">${d.name}</div>
+                <button class="btn-pixel" onclick="addToCart('${d.name.replace(/'/g, "\\'")}')">+ Add to Order</button>
+            </div>
+        `).join('');
+    }
+
+    function addToCart(name) {
+        cart.push(name);
+        updateCartDisplay();
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+        const listContainer = document.getElementById('cartInventoryList');
+        const submitBtn = document.getElementById('submitBtn');
+        if(!listContainer || !submitBtn) return;
+
+        if(cart.length === 0) {
+            listContainer.innerHTML = `<div style="color: #888; font-style: italic; text-align: center; margin-top: 40px;">No items selected yet.</div>`;
+            submitBtn.disabled = true;
+        } else {
+            listContainer.innerHTML = cart.map((item, index) => `
+                <div class="cart-item-row">
+                    <span>✅ ${item}</span>
+                    <button class="btn-pixel btn-red" style="padding: 0px 6px; font-size: 16px;" onclick="removeFromCart(${index})">Remove</button>
+                </div>
+            `).join('');
+            submitBtn.disabled = false;
+        }
+    }
+
+    function submitCart() {
+        // Change the email below to your actual email address!
+        const yourEmail = "YOUR_EMAIL@HERE.com"; 
+        
+        const subject = encodeURIComponent("🌾 New Farmhouse Order Request!");
+        const body = encodeURIComponent("Hi Sissi!\n\nI would love to have these dishes today please:\n\n" + cart.map(item => `• ${item}`).join('\n') + "\n\nThank you! ❤️");
+        
+        window.location.href = `mailto:${yourEmail}?subject=${subject}&body=${body}`;
+
+        document.getElementById('mainInterface').classList.add('hidden');
+        document.getElementById('successPage').classList.remove('hidden');
+    }
+
+    function returnToMenu() {
+        cart = [];
+        updateCartDisplay();
+        document.getElementById('successPage').classList.add('hidden');
+        document.getElementById('mainInterface').classList.remove('hidden');
+    }
+
+    function addCategory() {
+        const val = document.getElementById('newCatInput').value.trim();
+        if(val && !categories.includes(val)) {
+            categories.push(val);
+            if(!activeCategory) activeCategory = val;
+            document.getElementById('newCatInput').value = "";
+            renderLayout();
+            updateCategoryDropdown();
+        }
+    }
+
+    function deleteCategory(catName) {
+        if(confirm(`Completely remove "${catName}" category?`)) {
+            categories = categories.filter(c => c !== catName);
+            dishes = dishes.filter(d => d.category !== catName);
+            activeCategory = categories[0] || "";
+            renderLayout();
+            updateCategoryDropdown();
+        }
+    }
+
+    function addDish() {
+        const name = document.getElementById('dishNameInput').value.trim();
+        const cat = document.getElementById('dishCatSelect').value;
+        const imgUrl = document.getElementById('dishUrlInput').value.trim();
+
+        if(!name || !cat) return;
+        const finalImg = imgUrl ? imgUrl : "https://via.placeholder.com/150?text=Food";
+        
+        dishes.push({ name: name, category: cat, img: finalImg });
+        
+        document.getElementById('dishNameInput').value = "";
+        document.getElementById('dishUrlInput').value = "";
+        renderLayout();
+    }
+
+    function deleteDish(dishName) {
+        if(confirm(`Remove "${dishName}"?`)) {
+            dishes = dishes.filter(d => d.name !== dishName);
+            renderLayout();
+        }
+    }
+
+    initApp();
+</script>
+
+</body>
+</html>
