@@ -435,9 +435,9 @@
             img: "https://i.postimg.cc/hP7thWg5/IMG-3740-Small.jpg" 
         },
         { 
-            name: "Sandwich", 
+            name: "Carbonara", 
             category: "Brunch", 
-            img: "https://i.postimg.cc/mknkJT4j/IMG-3579-2-Small.jpg" 
+            img: "https://i.postimg.cc/wv0QtRXC/IMG-3584-2-Small.jpg" 
         },
         { 
             name: "大葱烧豆腐", 
@@ -502,7 +502,7 @@
             const isFolded = foldedCategories[cat] || false;
             
             let dishesListHTML = catDishes.map(d => `
-                <div class="dish-name-item" onclick="selectCategoryFromDish('${d.category.replace(/'/g, "\\'")}')">
+                <div class="dish-name-item" onclick="activeCategory='${d.category.replace(/'/g, "\\'")}'; renderLayout(); setTimeout(() => { const safeId = 'dish-card-' + btoa(unescape(encodeURIComponent('${d.name.replace(/'/g, "\\'")}'))).replace(/=/g, ''); const el = document.getElementById(safeId); if(el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 50);">
                     <span>• ${d.name}</span>
                     <button class="btn-pixel btn-red delete-action-btn" style="display: ${editModeActive ? 'inline-block' : 'none'};" onclick="event.stopPropagation(); deleteDish('${d.name.replace(/'/g, "\\'")}')">X</button>
                 </div>
