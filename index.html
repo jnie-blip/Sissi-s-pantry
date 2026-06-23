@@ -429,7 +429,6 @@
     //                      END OF EASY EDIT ZONE
     // ========================================================================
 
-    // CRITICAL: We point directly to the initial arrays to ignore glitched local storage memory
     let categories = initialCategories;
     let dishes = initialDishes;
     let activeCategory = categories[0] || "";
@@ -458,6 +457,11 @@
         }
     }
 
+    function selectCategoryFromDish(catName) {
+        activeCategory = catName;
+        renderLayout();
+    }
+
     function renderLayout() {
         const leftCol = document.getElementById('categoriesColumn');
         if(!leftCol) return;
@@ -468,7 +472,7 @@
             const isFolded = foldedCategories[cat] || false;
             
             let dishesListHTML = catDishes.map(d => `
-                <div class="dish-name-item" onclick="event.stopPropagation(); addToCart('${d.name.replace(/'/g, "\\'")}')">
+                <div class="dish-name-item" onclick="selectCategoryFromDish('${d.category.replace(/'/g, "\\'")}')">
                     <span>• ${d.name}</span>
                     <button class="btn-pixel btn-red delete-action-btn" style="display: ${editModeActive ? 'inline-block' : 'none'};" onclick="event.stopPropagation(); deleteDish('${d.name.replace(/'/g, "\\'")}')">X</button>
                 </div>
@@ -555,7 +559,6 @@
     }
 
     function submitCart() {
-        // Change the email below to your actual email address!
         const yourEmail = "YOUR_EMAIL@HERE.com"; 
         
         const subject = encodeURIComponent("🌾 New Farmhouse Order Request!");
